@@ -11,9 +11,10 @@ cars_schema = CarSchema(many=True)
 
 
 class CarListResource(Resource):
-    parser = reqparse.RequestParser()  # only allow price changes, no name changes allowed
+    parser = reqparse.RequestParser()
     parser.add_argument('year', type=int, required=False,
                         help='This field cannot be string')
+
     def get(self):
         cars = CarModel.query.all()
         cars_data = cars_schema.dump(cars)
@@ -21,7 +22,7 @@ class CarListResource(Resource):
 
     @jwt_required()
     def post(self):
-        new_post = CarModel( 
+        new_post = CarModel(
             brand=request.json['brand'],
             year=request.json['year']
         )
@@ -33,8 +34,8 @@ class CarListResource(Resource):
             return {"error": "You send invalid request"}, 400
 
 
-
 class CarResource(Resource):
+    @jwt_required()
     def get(self, car_id):
         try:
             car = CarModel.query.get_or_404(car_id)
@@ -42,6 +43,7 @@ class CarResource(Resource):
         except:
             return {"error": f"car: {car_id} does not exists"}, 404
 
+    @jwt_required()
     def patch(self, car_id):
         car = CarModel.query.get_or_404(car_id)
 
@@ -53,6 +55,7 @@ class CarResource(Resource):
         db.session.commit()
         return car_schema.dump(car)
 
+    @jwt_required()
     def delete(self, car_id):
         car = CarModel.query.get_or_404(car_id)
         db.session.delete(car)

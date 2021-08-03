@@ -1,4 +1,3 @@
-
 from werkzeug.security import hmac
 from passlib.hash import pbkdf2_sha256 as sha256
 from db import db
@@ -22,8 +21,6 @@ class UserModel(db.Model):
     @staticmethod
     def generate_hash(password):
         return sha256.hash(password)
-
-
 
     @staticmethod
     def verify_hash(password, hash_):

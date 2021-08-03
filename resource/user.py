@@ -1,7 +1,6 @@
 from flask_restful import Resource, reqparse
 from flask import jsonify
 from flask_jwt_extended import create_access_token, jwt_required
-from flask_jwt_extended import current_user
 
 
 import json
@@ -11,8 +10,7 @@ from models.user import UserModel
 
 
 class User(Resource):
-
-    parser = reqparse.RequestParser()  # only allow price changes, no name changes allowed
+    parser = reqparse.RequestParser()
     parser.add_argument('username', type=str, required=True,
                         help='This field cannot be left blank')
     parser.add_argument('password', type=str, required=True,
@@ -34,10 +32,8 @@ class User(Resource):
             return {'message': 'Wrong username or password.'}, 401
 
 
-
 class UserRegister(Resource):
-
-    parser = reqparse.RequestParser()  # only allow price changes, no name changes allowed
+    parser = reqparse.RequestParser()
     parser.add_argument('username', type=str, required=True,
                         help='This field cannot be left blank')
     parser.add_argument('password', type=str, required=True,
@@ -52,8 +48,7 @@ class UserRegister(Resource):
         new_user = UserModel(
             username=data['username'],
             password=UserModel.generate_hash(data['password'])
-                             )
-
+        )
 
         new_user.save_to_db()
 
